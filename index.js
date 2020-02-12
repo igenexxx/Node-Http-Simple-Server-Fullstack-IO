@@ -3,7 +3,8 @@ const http = require('http');
 const port = process.env.PORT || 1337;
 
 const server = http.createServer((req, res) => {
-    res.end('hi');
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({ text: 'hi', numbers: [1, 2, 3]}))
 }).listen(port);
 
 console.log(`Server listening on port ${port}`);
