@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 const http = require('http');
 const querystring = require('querystring');
 
@@ -30,6 +32,14 @@ const respondEcho = (req, res) => {
     }))
 };
 
+const respondStatic = (req, res) => {
+    const filename = `${__dirname}${req.url.replace('/static', '/public')}`;
+
+    fs.createReadStream(filename)
+        .on('error', () => respondNotFound(req, res))
+        .pipe(res);
+};
+
 const server = http.createServer((req, res) => {
     switch(req.url) {
         case '/':
@@ -40,6 +50,10 @@ const server = http.createServer((req, res) => {
 
     if (req.url.match(/^\/echo/)) {
         return respondEcho(req, res);
+    }
+
+    if (req.url.match(/^\/static/)) {
+        return respondStatic(req, res);
     }
 
 
